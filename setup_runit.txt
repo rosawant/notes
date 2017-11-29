@@ -1,0 +1,60 @@
+1. Create runit repo file
+
+# vim /etc/yum.repos.d/imeyer_runit.repo
+
+[imeyer_runit]
+name=imeyer_runit
+baseurl=https://packagecloud.io/imeyer/runit/el/6/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/imeyer/runit/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+2. yum install runit
+
+3. Now create directory 
+
+# mkdir -p /etc/sv/<name-of-service>/
+
+Example :
+
+# mkdir -p /etc/sv/tomcat/
+
+3. Create run (script) file inside above directory 
+
+# cd /etc/sv/tomcat/
+# vim run
+
+		#!/bin/bash
+
+		ulimit -m unlimited
+		ulimit -v unlimited
+		ulimit -d unlimited
+		ulimit -n 64000
+		ulimit -f unlimited
+		ulimit -u 131072
+
+
+		exec 2>&1
+
+		source /etc/profile
+
+		exec chpst -u root:root "/opt/tomcat/bin/catalina.sh" run >> "/opt/tomcat/logs/catalina.out" 2>&1
+
+# chmod 755 run
+
+4. Create softlink 
+
+# ln -s /etc/sv/tomcat /etc/service/tomcat
+# ln -s /sbin/sv /etc/init.d/tomcat
+
+5. Enable the service to start at boot
+
+# sv enable tomcat
+
+6. To check the status and start the service :
+
+# sv status tomcat
+# sv start tomcat
