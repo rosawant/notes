@@ -22,4 +22,3 @@ for opfiles in glob.glob('/home/roshans/testing/v*.csv'):
 authed_jira.add_comment(issue,'files uploaded')
 
 
-#print srv.get('/tmp/vodafone_modify_reconcile_test/outputstep1act/*', '/home/roshans/testing/' )
